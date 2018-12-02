@@ -1,0 +1,16 @@
+[package]
+name = "minesweeper"
+version = "0.1.0"
+authors = ["thomas9911 <thomastimmer11@hotmail.com>"]
+build = "build.rs"
+
+
+[dependencies]
+piston_window = "0.85.0"
+rand = "*"
+rusttype="*"
+
+[target.'cfg(windows)'.build-dependencies]
+winres = "0.1"
+
+[package.metadata.winres]
