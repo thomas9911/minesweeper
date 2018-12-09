@@ -1,3 +1,4 @@
+#[derive(Debug)]
 pub struct CountDown {
     reset_time: u32,
     pub time_left: u32,

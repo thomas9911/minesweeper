@@ -25,10 +25,13 @@ impl Tiles {
     }
 
     fn is_legit(&mut self, x: usize, y: usize) -> bool {
-        (x < self.width)
-            & (y < self.height)
-            & self.tiles.get(x).is_some()
-            & self.tiles.get(y).is_some()
+        if (x > self.width) | (y > self.height){
+            return false
+        }
+        if self.tiles.get(x).is_some(){
+            return self.tiles[x].get(y).is_some();
+        }
+        false
     }
 
     pub fn set_mines(&mut self, amount_of_mines: u32) {
@@ -39,13 +42,9 @@ impl Tiles {
         let mut rng = SmallRng::from_rng(&mut thread_rng).unwrap();
         let mut mines_placed: u32 = 0;
 
-        // let seed = [1,2,3,4, 5,6,7,8, 9,10,11,12, 13,14,15,16]; // byte array
-        // let mut rng = SmallRng::from_seed(seed);
         while mines_placed < amount_of_mines {
             let x_choose: usize = rng.gen_range(0, self.width);
             let y_choose: usize = rng.gen_range(0, self.height);
-            // println!("{} {}", x_choose, y_choose);
-            // println!("{:?}", self.tiles[x_choose][y_choose]);
 
             if !self.tiles[x_choose][y_choose].mine {
                 self.tiles[x_choose][y_choose].set_as_mine();
@@ -84,11 +83,7 @@ impl Tiles {
                         if !((p == 0) & (q == 0)) {
                             let a = (i as i32 + p) as usize;
                             let b = (j as i32 + q) as usize;
-                            if (a < self.width)
-                                & (b < self.height)
-                                & self.tiles.get(a).is_some()
-                                & self.tiles.get(b).is_some()
-                            {
+                            if self.is_legit(a, b){
                                 if self.tiles[a][b].mine {
                                     count += 1;
                                 }
@@ -97,7 +92,6 @@ impl Tiles {
                     }
                 }
                 self.tiles[i][j].set_mines_around(count);
-                // println!("{} {}: {}", i, j, count);
             }
         }
     }
