@@ -183,14 +183,14 @@ fn run_minesweeper(mineboard: &mut Board) -> bool {
     let mut xy_coords: [u32; 2] = [0, 0];
 
     let mut window = make_window(mineboard.width, mineboard.height);
-    let mut glyphs = match make_font(&window){
+    let mut glyphs = match make_font(&mut window){
         Some(x) => x,
         _ => std::process::exit(0),
     };
 
     while let Some(e) = window.next() {
         mineboard.counter.tick();
-        window.draw_2d(&e, |c, g| {
+        window.draw_2d(&e, |c, g, _| {
             let transform = c.transform.trans(mineboard.width as f64 / 4.0, mineboard.height as f64 / 2.0);
             clear([1.0; 4], g);
 
@@ -258,16 +258,20 @@ fn make_window(width: u32, height: u32) -> PistonWindow{
         .unwrap()
 }
 
-fn make_font(window: &PistonWindow) -> Option<Glyphs>{
+fn make_font(window: &mut PistonWindow) -> Option<Glyphs>{
     let font_data: &[u8] = include_bytes!("../assets/GlacialIndifference-Regular.ttf");
-    let nice_font: Font<'static> = match Font::from_bytes(font_data) {
-        Ok(x) => x,
-        Err(x) => {
-            println!("{}", x);
+    let nice_font: Font<'static> = match Font::try_from_bytes(font_data) {
+        Some(x) => x,
+        None => {
+            println!("broke :'( ");
             return None;
         }
     };
 
-    let factory = window.factory.clone();
-    Some(Glyphs::from_font(nice_font, factory, TextureSettings::new()))
+    let ctx = TextureContext {
+        encoder: window.factory.create_command_buffer().into(),
+        factory: window.factory.clone(),
+    };
+    // Some(Glyphs::from_font(nice_font, ctx, TextureSettings::new()))
+
 }

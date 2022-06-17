@@ -43,8 +43,8 @@ impl Tiles {
         let mut mines_placed: u32 = 0;
 
         while mines_placed < amount_of_mines {
-            let x_choose: usize = rng.gen_range(0, self.width);
-            let y_choose: usize = rng.gen_range(0, self.height);
+            let x_choose: usize = rng.gen_range(0..self.width);
+            let y_choose: usize = rng.gen_range(0..self.height);
 
             if !self.tiles[x_choose][y_choose].mine {
                 self.tiles[x_choose][y_choose].set_as_mine();

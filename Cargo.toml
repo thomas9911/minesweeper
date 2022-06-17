@@ -2,13 +2,13 @@
 name = "minesweeper"
 version = "0.2.0"
 authors = ["thomas9911 <thomastimmer11@hotmail.com>"]
+edition = "2021"
 build = "build.rs"
 
-
 [dependencies]
-structopt = "0.2"
-piston_window = "0.85.0"
-rand = "*"
+structopt = "0.3.0"
+piston_window = "0.123.0"
+rand = { version = "0.8", features = ["small_rng"]}
 rusttype="*"
 
 [target.'cfg(windows)'.build-dependencies]
